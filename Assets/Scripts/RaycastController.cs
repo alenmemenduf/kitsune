@@ -2,7 +2,7 @@
 using System.Collections;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public class Controller2D : MonoBehaviour
+public class RaycastController : MonoBehaviour
 {
 
 	public LayerMask collisionMask;
@@ -11,17 +11,23 @@ public class Controller2D : MonoBehaviour
 	public int horizontalRayCount = 4;  //Number of horizontal rays
 	public int verticalRayCount = 4;    //Number of vertical rays
 
-	float horizontalRaySpacing;         //The horizontal space between the rays
-	float verticalRaySpacing;           //The vertical space between the rays
+	[HideInInspector]
+	public float horizontalRaySpacing;         //The horizontal space between the rays
+	[HideInInspector]
+	public float verticalRaySpacing;           //The vertical space between the rays
 
-	BoxCollider2D collider;             //Collider component of our player object
+	[HideInInspector]
+	public BoxCollider2D collider;             //Collider component of our player object
 	RaycastOrigins raycastOrigins;
 
 	public CollisionInfo collisions;
-
-	void Start()
+	public virtual void Awake()
 	{
 		collider = GetComponent<BoxCollider2D>();
+	}
+	public virtual void Start()
+	{
+		
 		CalculateRaySpacing();
 		collisions.faceDir = 1;
 	}
@@ -58,7 +64,7 @@ public class Controller2D : MonoBehaviour
 		for (int i = 0; i < horizontalRayCount; i++)
 		{
 			Vector2 rayOrigin = (directionX == -1) ? raycastOrigins.bottomLeft : raycastOrigins.bottomRight;
-			rayOrigin += Vector2.up * (horizontalRaySpacing * i);
+			rayOrigin += Vector2.up * (horizontalRaySpacing * i);			
 			RaycastHit2D hit = Physics2D.Raycast(rayOrigin, Vector2.right * directionX, rayLength, collisionMask);
 
 			Debug.DrawRay(rayOrigin, Vector2.right * directionX * rayLength, Color.red);

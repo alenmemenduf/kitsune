@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent (typeof (Controller2D))]
+[RequireComponent (typeof (RaycastController))]
 public class Player : MonoBehaviour
 {
     //Movement constants
@@ -17,7 +17,6 @@ public class Player : MonoBehaviour
     public Vector2 wallLeap;                //Velocity when player wants to wall leap from curent wall to another in the opposite direction
 
     //Wall slide constants
-    bool wallSliding = false;
     public float wallSlideSpeedMax = 3;     //Max speed that player can have while sliding the wall without moving
     public float wallStickTime = 0.25f;      //Max time before player gets unstick from the wall (makes wall leaping easier to perform)
     float timeToWallUnstick;
@@ -32,12 +31,12 @@ public class Player : MonoBehaviour
     float jumpVelocity = 8;
     float velocityXSmoothing;
 
-    Controller2D controller;
+    RaycastController controller;
 
     // Start is called before the first frame update
     void Start()
     {
-        controller = GetComponent<Controller2D>();
+        controller = GetComponent<RaycastController>();
 
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);     //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
         jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;             //kinematic operation of jump velocity
@@ -57,34 +56,37 @@ public class Player : MonoBehaviour
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);    //Smooth the movement between initial velocity and desired velosity (acceleration is taken into account)
 
         //Wall sliding
-        wallSliding = false;
+        bool wallSliding = false;
         if((controller.collisions.left || controller.collisions.right) && // If player touching either wall &&
             !controller.collisions.below && velocity.y < 0)  //If player is touching the wall while mid air
-            {
-                timeUntilFall -= Time.deltaTime;
-                wallSliding = true;
-            if (velocity.y < -wallSlideSpeedMax && timeUntilFall > 0)
-                velocity.y = -wallSlideSpeedMax;    // if object falls faster than max wall slide speed while 
-                                                    // stuck to the wall then set it's speed to constant -wallSlideSpeedMax
+        {
+                
+            wallSliding = true;
 
-                if (timeToWallUnstick > 0)               //Time how much time before player can unstick from the wall (0.25 secs)
+            if (velocity.y < -wallSlideSpeedMax && timeUntilFall > 0)
+            {
+                velocity.y = -wallSlideSpeedMax;    // if object falls faster than max wall slide speed while 
+                timeUntilFall -= Time.deltaTime;
+            }
+
+            if (timeToWallUnstick > 0)  //Time how much time before player can unstick from the wall (0.25 secs)         
                 {
-                    velocityXSmoothing = 0;
-                    velocity.x = 0;
-                    if (input.x != wallDirX && input.x != 0)
-                    {
-                        timeToWallUnstick -= Time.deltaTime;
-                    }
-                    else
-                    {
-                        timeToWallUnstick = wallStickTime;
-                    }
+                velocityXSmoothing = 0;
+                velocity.x = 0;
+                if (input.x != wallDirX && input.x != 0)
+                {
+                    timeToWallUnstick -= Time.deltaTime;
                 }
                 else
                 {
                     timeToWallUnstick = wallStickTime;
                 }
             }
+            else
+            {
+                timeToWallUnstick = wallStickTime;
+            }
+        }
         //If player is on ground just set its velocity to 0
         if(controller.collisions.above || controller.collisions.below)
         {
