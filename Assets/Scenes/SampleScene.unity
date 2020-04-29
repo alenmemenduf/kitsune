@@ -174,7 +174,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 7
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -360,13 +360,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438b392c2900dc34a9ca4b2b73e42acf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpHeight: 4
+  jumpHeight: 5
   timeToJumpApex: 0.4
   moveSpeed: 6
   wallJumpOff: {x: 8.5, y: 7}
   wallLeap: {x: 18, y: 17}
-  wallSlideSpeedMax: 3
+  wallSlideSpeedMax: 2.3
   wallStickTime: 0.25
+  fallTime: 0.6
 --- !u!61 &818686284
 BoxCollider2D:
   m_ObjectHideFlags: 0

@@ -16,10 +16,15 @@ public class Player : MonoBehaviour
     public Vector2 wallJumpOff;             //Velocity when player jumps off the wall withouth moving
     public Vector2 wallLeap;                //Velocity when player wants to wall leap from curent wall to another in the opposite direction
 
-    //Wall slide constatns
+    //Wall slide constants
+    bool wallSliding = false;
     public float wallSlideSpeedMax = 3;     //Max speed that player can have while sliding the wall without moving
-    public float wallStickTime = 0f;      //Max time before player gets unstick from the wall (makes wall leaping easier to perform)
+    public float wallStickTime = 0.25f;      //Max time before player gets unstick from the wall (makes wall leaping easier to perform)
     float timeToWallUnstick;
+
+    //Wall falling when sticky constants/variables
+    public float fallTime = 0.5f;
+    float timeUntilFall; // timeUntilFall before I unstick and player fall
 
     //Kinematic operation variables/constants
     Vector3 velocity;
@@ -39,7 +44,6 @@ public class Player : MonoBehaviour
 
         print("Gravity: " + gravity + " Jump Velocity: " + jumpVelocity);
     }
-
     // Update is called once per frame
     void Update()
     {
@@ -53,36 +57,38 @@ public class Player : MonoBehaviour
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);    //Smooth the movement between initial velocity and desired velosity (acceleration is taken into account)
 
         //Wall sliding
-        bool wallSliding = false;
-        if((controller.collisions.left || controller.collisions.right) && !controller.collisions.below && velocity.y < 0)  //If player is touching the wall while mid air
-        {
-            wallSliding = true;
+        wallSliding = false;
+        if((controller.collisions.left || controller.collisions.right) && // If player touching either wall &&
+            !controller.collisions.below && velocity.y < 0)  //If player is touching the wall while mid air
+            {
+                timeUntilFall -= Time.deltaTime;
+                wallSliding = true;
+            if (velocity.y < -wallSlideSpeedMax && timeUntilFall > 0)
+                velocity.y = -wallSlideSpeedMax;    // if object falls faster than max wall slide speed while 
+                                                    // stuck to the wall then set it's speed to constant -wallSlideSpeedMax
 
-            if(velocity.y < -wallSlideSpeedMax) 
-            {
-                velocity.y = -wallSlideSpeedMax;    //if object falls faster than max wall slide speed while stuck to the wall then set it's speed to constant -wallSlideSpeedMax
-            }
-            if(timeToWallUnstick > 0)               //Time how much time before player can unstick from the wall (0.25 secs)
-            {
-                velocityXSmoothing = 0;
-                velocity.x = 0;
-                if(input.x != wallDirX && input.x != 0)
+                if (timeToWallUnstick > 0)               //Time how much time before player can unstick from the wall (0.25 secs)
                 {
-                    timeToWallUnstick -= Time.deltaTime;
+                    velocityXSmoothing = 0;
+                    velocity.x = 0;
+                    if (input.x != wallDirX && input.x != 0)
+                    {
+                        timeToWallUnstick -= Time.deltaTime;
+                    }
+                    else
+                    {
+                        timeToWallUnstick = wallStickTime;
+                    }
                 }
-                else{
+                else
+                {
                     timeToWallUnstick = wallStickTime;
                 }
             }
-            else
-            {
-                timeToWallUnstick = wallStickTime;
-            }
-        }
-
         //If player is on ground just set its velocity to 0
         if(controller.collisions.above || controller.collisions.below)
         {
+            timeUntilFall = fallTime; // if on floor or hit the hed you can slide again ;)
             velocity.y = 0;
         }
 
@@ -98,6 +104,7 @@ public class Player : MonoBehaviour
                     velocity.y = wallJumpOff.y;
                 }else if(-wallDirX == input.x)
                 {
+                    timeUntilFall = fallTime; // if jumping and sliding on wall and changing direction => you are able to slide again
                     velocity.x = -wallDirX * wallLeap.x;
                     velocity.y = wallLeap.y;
                 }
