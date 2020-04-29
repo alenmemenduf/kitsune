@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
         //If player is on ground just set its velocity to 0
         if(controller.collisions.above || controller.collisions.below)
         {
-            timeUntilFall = fallTime; // if on floor or hit the hed you can slide again ;)
+            timeUntilFall = fallTime; // if on floor or hit the hed you can slide again
             velocity.y = 0;
         }
 
