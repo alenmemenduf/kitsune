@@ -18,7 +18,7 @@ public class Player : MonoBehaviour
 
     //Wall slide constatns
     public float wallSlideSpeedMax = 3;     //Max speed that player can have while sliding the wall without moving
-    public float wallStickTime = .25f;      //Max time before player gets unstick from the wall (makes wall leaping easier to perform)
+    public float wallStickTime = 0f;      //Max time before player gets unstick from the wall (makes wall leaping easier to perform)
     float timeToWallUnstick;
 
     //Kinematic operation variables/constants
@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
             {
                 velocity.y = -wallSlideSpeedMax;    //if object falls faster than max wall slide speed while stuck to the wall then set it's speed to constant -wallSlideSpeedMax
             }
-            if(timeToWallUnstick > 0)               //Time how much time before player can unstick from the wall (0.25 secs)
+           /* if(timeToWallUnstick > 0)               //Time how much time before player can unstick from the wall (0.25 secs)
             {
                 velocityXSmoothing = 0;
                 velocity.x = 0;
@@ -77,7 +77,7 @@ public class Player : MonoBehaviour
             else
             {
                 timeToWallUnstick = wallStickTime;
-            }
+            }*/
         }
 
         //If player is on ground just set its velocity to 0
