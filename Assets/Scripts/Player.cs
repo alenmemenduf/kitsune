@@ -28,17 +28,27 @@ public class Player : MonoBehaviour
     float timeUntilFall; // timeUntilFall before I unstick and player fall
 
     //Kinematic operation variables/constants
-    Vector3 velocity;
+
+    [HideInInspector]
+    public Vector3 velocity;
     float gravity;
     float jumpVelocity = 8;
     float velocityXSmoothing;
 
-    float faceDirection;
+    [HideInInspector]
+    public float faceDirection;
     RaycastController controller;
+
+    [HideInInspector]
+    public bool isDashing = false;
+
+    float timeLeft;
 
     void Dash()
     {
-        velocity.x = faceDirection * dashSpeed / dashTime; 
+        isDashing = true;
+        velocity.x = faceDirection * dashSpeed / dashTime;
+   
     }
 
     // Start is called before the first frame update
@@ -128,12 +138,28 @@ public class Player : MonoBehaviour
 
         }
 
+        
         if (Input.GetKeyDown(KeyCode.LeftShift))
         {
             Dash();
+            timeLeft = dashTime ;
+
+
         }
+        if (timeLeft > 0f)
+        {
+            timeLeft -= Time.deltaTime;
+        }
+        else
+        {
+            isDashing = false;
+        }
+        
+
+
 
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
+   
 }

@@ -20,6 +20,7 @@ public class RaycastController : MonoBehaviour
 	public BoxCollider2D collider;             //Collider component of our player object
 	RaycastOrigins raycastOrigins;
 
+
 	public CollisionInfo collisions;
 	public virtual void Awake()
 	{
@@ -37,7 +38,7 @@ public class RaycastController : MonoBehaviour
 		UpdateRaycastOrigins();
 		collisions.Reset();
 
-		if(velocity.x != 0)
+		if (velocity.x != 0)
 		{
 			collisions.faceDir = (int)Mathf.Sign(velocity.x);
 		}
