@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float timeToJumpApex = .4f;      //How much time the jump action takes to reach apex
     public float moveSpeed = 6f;             //Player movement speed
     public float dashSpeed = 30f;            //Player dash speed
+    public float dashTime = 10f;
     float accelerationTimeAirborne = .2f;   //In air acceleration
     float accelerationTimeGrounded = .1f;   //Grounded acceleration
 
@@ -37,10 +38,7 @@ public class Player : MonoBehaviour
 
     void Dash()
     {
-           if (true)
-           {
-                velocity.x += faceDirection * dashSpeed;
-           }
+        velocity.x = faceDirection * dashSpeed / dashTime; 
     }
 
     // Start is called before the first frame update
@@ -135,7 +133,7 @@ public class Player : MonoBehaviour
             Dash();
         }
 
-            velocity.y += gravity * Time.deltaTime;
+        velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 }
