@@ -8,7 +8,8 @@ public class Player : MonoBehaviour
     //Movement constants
     public float jumpHeight = 4;            //Max height the player can jump
     public float timeToJumpApex = .4f;      //How much time the jump action takes to reach apex
-    public float moveSpeed = 6;             //Player movement speed
+    public float moveSpeed = 6f;             //Player movement speed
+    public float dashSpeed = 30f;            //Player dash speed
     float accelerationTimeAirborne = .2f;   //In air acceleration
     float accelerationTimeGrounded = .1f;   //Grounded acceleration
 
@@ -31,7 +32,16 @@ public class Player : MonoBehaviour
     float jumpVelocity = 8;
     float velocityXSmoothing;
 
+    float faceDirection;
     RaycastController controller;
+
+    void Dash()
+    {
+           if (true)
+           {
+                velocity.x += faceDirection * dashSpeed;
+           }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -49,6 +59,8 @@ public class Player : MonoBehaviour
 
         //Movement Input
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  //Get Input from user
+        if (input.x != 0) 
+            faceDirection = input.x; // stores last direction the player faced.
         int wallDirX = (controller.collisions.left) ? -1 : 1;                                       //Direction of the wall we colided with.
 
         //Horizontal movement smoothing
@@ -115,11 +127,15 @@ public class Player : MonoBehaviour
             {
                 velocity.y = jumpVelocity;
             }
-            
+
         }
 
-   
-        velocity.y += gravity * Time.deltaTime;
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            Dash();
+        }
+
+            velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
 }
