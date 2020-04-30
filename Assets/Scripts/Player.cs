@@ -14,6 +14,9 @@ public class Player : MonoBehaviour
     float accelerationTimeAirborne = .2f;   //In air acceleration
     float accelerationTimeGrounded = .1f;   //Grounded acceleration
 
+    //Grappling hook
+    public float hingeViewRadius;
+
     //Wall jump/leap constants
     public Vector2 wallJumpOff;             //Velocity when player jumps off the wall withouth moving
     public Vector2 wallLeap;                //Velocity when player wants to wall leap from curent wall to another in the opposite direction

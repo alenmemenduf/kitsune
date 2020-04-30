@@ -29,9 +29,12 @@ public class EnemyGuard : AbstractEnemy
         while (true)
         {
             if (transform.position.x < targetWaypoint.x)
+            {
                 faceDirection = 1;
-            else
+            } else {
                 faceDirection = -1;
+            }
+
             transform.position = Vector2.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
             if((Vector2)transform.position == targetWaypoint)
             {

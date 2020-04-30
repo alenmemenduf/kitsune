@@ -4,17 +4,21 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    public float viewRadius;
+    public float viewRadius;            //Radius of the circle in which we want the camera to
     [Range(0,360)]
     public float viewAngle;
 
     public LayerMask targetMask;
     public LayerMask obstacleMask;
+    public Material redFovMaterial;
 
+    [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
     public float meshResolution;
     public MeshFilter viewMeshFilter;
     Mesh viewMesh;
+    Material whiteFovMaterial;
+    
 
 
     private void Start()
@@ -22,13 +26,23 @@ public class FieldOfView : MonoBehaviour
         viewMesh = new Mesh();
         viewMesh.name = "View Mesh";
         viewMeshFilter.mesh = viewMesh;
-
+        whiteFovMaterial = viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material;
         StartCoroutine("FindTargetsWithDelay", .2f);
     }
 
     private void LateUpdate()
     {
         DrawFieldOfView();
+        if(visibleTargets.Count != 0)
+        {
+
+            viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = redFovMaterial;
+
+        }
+        else
+        {
+            viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = whiteFovMaterial;
+        }
     }
     public Vector2 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
@@ -118,7 +132,11 @@ public class FieldOfView : MonoBehaviour
                 if(!Physics2D.Raycast(transform.position, dirToTarget,distToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
+             
+                    // target.gameObject.GetComponent<Player>().enabled = false;
+
                 }
+ 
             }
         }
     }
