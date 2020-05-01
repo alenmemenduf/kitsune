@@ -5,14 +5,19 @@ using UnityEngine;
 [RequireComponent (typeof (RaycastController))]
 public class Player : MonoBehaviour
 {
+
+    //Game manager
+    [HideInInspector]
+    public bool isDead = false;
     //Movement constants
-    public float jumpHeight = 4;            //Max height the player can jump
+    public float maxJumpHeight = 4;            //Max height the player can jump
+    public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;      //How much time the jump action takes to reach apex
     public float moveSpeed = 6f;             //Player movement speed
     public float dashSpeed = 30f;            //Player dash speed
     public float dashTime = 10f;
-    float accelerationTimeAirborne = .25f;   //In air acceleration
-    float accelerationTimeGrounded = .1f;   //Grounded acceleration
+    float accelerationTimeAirborne = .3f;   //In air acceleration
+    float accelerationTimeGrounded = .08f;   //Grounded acceleration
 
     //Grappling hook
     public float hingeViewRadius;
@@ -39,7 +44,8 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public Vector3 velocity;
     float gravity;
-    float jumpVelocity = 8;
+    float maxJumpVelocity;
+    float minJumpVelocity; 
     float velocityXSmoothing;
 
     [HideInInspector]
@@ -71,13 +77,15 @@ public class Player : MonoBehaviour
         line.startWidth = 0.1f;
         line.endWidth = 0.1f;
 
+      
         controller = GetComponent<RaycastController>();
 
-        gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);     //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
-        jumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;             //kinematic operation of jump velocity
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);     //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;             //kinematic operation of jump velocity
+        minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
         StartCoroutine("FindTargetsWithDelay", .2f);
-        print("Gravity: " + gravity + " Jump Velocity: " + jumpVelocity);
+        print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
     }
     // Update is called once per frame
     void Update()
@@ -151,9 +159,16 @@ public class Player : MonoBehaviour
             }
             if (controller.collisions.below)
             {
-                velocity.y = jumpVelocity;
+                velocity.y = maxJumpVelocity;
             }
 
+        }
+        if (Input.GetKeyUp(KeyCode.Space))
+        {
+            if (velocity.y > minJumpVelocity)
+            {
+                velocity.y = minJumpVelocity;
+            }
         }
 
         if (Input.GetMouseButtonDown(0))
@@ -271,4 +286,5 @@ public class Player : MonoBehaviour
             visibleTargets.Add(target);
         }
     }
+
 }

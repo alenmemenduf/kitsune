@@ -132,9 +132,8 @@ public class FieldOfView : MonoBehaviour
                 if(!Physics2D.Raycast(transform.position, dirToTarget,distToTarget, obstacleMask))
                 {
                     visibleTargets.Add(target);
-             
-                    // target.gameObject.GetComponent<Player>().enabled = false;
-
+                    target.GetComponent<Player>().isDead = true;
+                    gameObject.GetComponent<EnemyCamera>().enabled = false;
                 }
  
             }
