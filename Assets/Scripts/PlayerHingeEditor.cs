@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
-[RequireComponent (typeof (Player))]
+[CustomEditor (typeof (Player))]
 public class PlayerHingeEditor : Editor
 {
-    // Start is called before the first frame update
 
     private void OnSceneGUI()
     {
