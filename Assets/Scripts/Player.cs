@@ -51,6 +51,10 @@ public class Player : MonoBehaviour
 
     float timeLeft;
 
+    ///
+    /// debug
+    LineRenderer line;
+    /// 
     void Dash()
     {
         isDashing = true;
@@ -61,7 +65,12 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-     
+        line = GetComponent<LineRenderer>();
+        if (!line)
+            line = gameObject.AddComponent<LineRenderer>();
+        line.startWidth = 0.1f;
+        line.endWidth = 0.1f;
+
         controller = GetComponent<RaycastController>();
 
         gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);     //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
@@ -152,52 +161,20 @@ public class Player : MonoBehaviour
             if(visibleTargets.Count != 0)
             {
                 float distance = (transform.position - visibleTargets[0].position).magnitude;
-
-               
-                   isHooked = true;
-                
-               
+                isHooked = true;
+                             
                 //velocity -= transform.position - visibleTargets[0].position;
 
             }
         }
 
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonUp(0))
         {
-            
             isHooked = false;
-              
         }
         if (visibleTargets.Count == 0)
         {
             isHooked = false;
-        }
-
-        if (isHooked )
-        {
-
-            float distance = (transform.position - visibleTargets[0].position).magnitude;
-            float maxDistance = 7;
-            ;
-            if (distance > maxDistance)
-            {
-                Vector3 test = visibleTargets[0].position + (transform.position - visibleTargets[0].position).normalized * maxDistance;
-
-                float dx = (test.x - transform.position.x) / Time.deltaTime;
-                float dy = (test.y - transform.position.y) / Time.deltaTime;
-
-               
-                
-               
-                velocity.x = (-faceDirection * 15 * Vector2.Perpendicular((Vector2)visibleTargets[0].position - (Vector2)transform.position).normalized).x;
-                
-               
-                velocity.y = dy;
-
-            }
-           
-
-          
         }
 
 
@@ -217,6 +194,62 @@ public class Player : MonoBehaviour
         }
 
         velocity.y += gravity * Time.deltaTime;
+        if (isHooked)
+        {
+            /*
+            float distance = (transform.position - visibleTargets[0].position).magnitude;
+            float maxDistance = 7;
+            ;
+            if (distance > maxDistance)
+            {
+                Vector3 test = visibleTargets[0].position + (transform.position - visibleTargets[0].position).normalized * maxDistance;
+
+                float dx = (test.x - transform.position.x) / Time.deltaTime;
+                float dy = (test.y - transform.position.y) / Time.deltaTime;
+
+               
+                
+               
+                velocity.x = (-faceDirection * 15 * Vector2.Perpendicular((Vector2)visibleTargets[0].position - (Vector2)transform.position).normalized).x;
+                
+               
+                velocity.y = dy;
+
+            }
+            */
+            /*
+            float distance = (transform.position + velocity - visibleTargets[0].position).magnitude;
+            float maxDistance = 5;
+            if (distance > maxDistance)
+            {
+                Vector3 test = visibleTargets[0].position + (transform.position + velocity - visibleTargets[0].position).normalized * maxDistance;
+                velocity += (test - (visibleTargets[0].position + (transform.position + velocity - visibleTargets[0].position)));
+            }*/
+            float dx = (visibleTargets[0].position.x - transform.position.x);
+            float dy = (visibleTargets[0].position.y - transform.position.y);
+
+            float distance = (transform.position + velocity - visibleTargets[0].position).magnitude;
+            float maxDistance = 4;
+            Vector3 v = new Vector3(0, 0, 0);
+            if (distance > maxDistance)
+            {
+                float dx1 = dx / distance * maxDistance;
+                float dy1 = dy / distance * maxDistance;
+                v.x -= (dx1 - dx) * Time.deltaTime;
+                v.y -= (dy1 - dy) * Time.deltaTime;
+            }
+
+            velocity.x += v.x / (Time.deltaTime * 5);
+            velocity.y += v.y / (Time.deltaTime * 5);
+
+            line.enabled = true;
+            line.SetPosition(0, transform.position);
+            line.SetPosition(1, visibleTargets[0].position);
+        }
+        else
+        {
+            line.enabled = false;
+        }
         controller.Move(velocity * Time.deltaTime);
     }
 
