@@ -9,10 +9,14 @@ public class EnemyGuard : AbstractEnemy
     int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
 
     public Transform pathHolder;      // a gameObject that denotes the path, it has children that denote a waypoint
-    Transform FOV;
+
+    public GameObject oppositeEnemy;
+    
+    
+    //Transform FOV;
     private void Start()
     {
-        FOV = gameObject.transform.GetChild(0).transform;
+        //FOV = gameObject.transform.GetChild(0).transform;
         Vector2[] waypoints = new Vector2[pathHolder.childCount];
         for(int i = 0; i < waypoints.Length; i++)
         {
@@ -29,16 +33,15 @@ public class EnemyGuard : AbstractEnemy
 
         while (true)
         {
+            
             if (transform.position.x < targetWaypoint.x)
             {
                 faceDirection = 1;
-                if(FOV != null)
-                   FOV.localScale = new Vector2(1, FOV.localScale.y);
+             
             } else {
                 faceDirection = -1;
-                if (FOV != null)
-                    FOV.localScale = new Vector2(-1, FOV.localScale.y);
             }
+            
 
             transform.position = Vector2.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
             if((Vector2)transform.position == targetWaypoint)
@@ -46,6 +49,15 @@ public class EnemyGuard : AbstractEnemy
                 targetWaypointIndex = (targetWaypointIndex+1)% waypoints.Length;
                 targetWaypoint = waypoints[targetWaypointIndex];
                 yield return new WaitForSeconds(waitTime);
+
+                if (faceDirection == 1) {
+                    transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
+                    
+                }
+                else
+                {
+                    transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);
+                }
             }
             yield return null;
         }

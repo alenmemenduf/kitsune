@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     //Game manager
     [HideInInspector]
     public bool isDead = false;
+    public bool isWinner = false;
     //Movement constants
     public float maxJumpHeight = 4;            //Max height the player can jump
     public float minJumpHeight = 1;
@@ -142,6 +143,8 @@ public class Player : MonoBehaviour
                 timeToWallUnstick = wallStickTime;
             }
         }
+
+        animator.SetBool("isOnWall", wallSliding);
         //If player is on ground just set its velocity to 0
         if (controller.collisions.above || controller.collisions.below)
         {
@@ -311,5 +314,5 @@ public class Player : MonoBehaviour
             visibleTargets.Add(target);
         }
     }
-
+ 
 }

@@ -8,7 +8,8 @@ public class Timer : MonoBehaviour
 {
 
     Text text;
-    float time;
+    [HideInInspector]
+    public float time;
     public float timerSpeed = 1;
     public float colorChangeSpeed = 2;
 
