@@ -129,7 +129,7 @@ public class FieldOfView : MonoBehaviour
             {
                 float distToTarget = Vector2.Distance(transform.position, target.position);
 
-                if(!Physics2D.Raycast(transform.position, dirToTarget,distToTarget, obstacleMask))
+                if(!Physics2D.Raycast(transform.position, dirToTarget,distToTarget, obstacleMask) && !target.GetComponent<Player>().dashed)
                 {
                     visibleTargets.Add(target);
                     target.GetComponent<Player>().isDead = true;
