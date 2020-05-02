@@ -39,6 +39,9 @@ public class Player : MonoBehaviour
     public float fallTime = 0.5f;
     float timeUntilFall; // timeUntilFall before I unstick and player fall
 
+    //Animator
+    public Animator animator;
+
     //Kinematic operation variables/constants
 
     [HideInInspector]
@@ -50,6 +53,8 @@ public class Player : MonoBehaviour
 
     [HideInInspector]
     public float faceDirection;
+    private bool facingRight = true;
+    private bool facingLeft = false;
     RaycastController controller;
 
     [HideInInspector]
@@ -94,7 +99,11 @@ public class Player : MonoBehaviour
         //Movement Input
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  //Get Input from user
         if (input.x != 0)
+        {
             faceDirection = input.x; // stores last direction the player faced.
+        }
+        animator.SetFloat("Speed", Mathf.Abs(input.x));
+
         int wallDirX = (controller.collisions.left) ? -1 : 1;                                       //Direction of the wall we colided with.
 
         //Horizontal movement smoothing
@@ -266,6 +275,22 @@ public class Player : MonoBehaviour
             line.enabled = false;
         }
         controller.Move(velocity * Time.deltaTime);
+        
+        if(velocity.x < 0 && facingRight == true)
+        {
+            
+            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
+            facingRight = false;
+            facingLeft = true;
+        }
+        else if(velocity.x > 0 && facingLeft)
+        {
+            transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
+            facingLeft = false;
+            facingRight = true;
+        }
+
+    
     }
 
     IEnumerator FindTargetsWithDelay(float delay)

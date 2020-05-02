@@ -1,0 +1,70 @@
+{
+    "tilewidth": 64,
+    "tileshigh": 1,
+    "layers": [
+        {
+            "number": 0,
+            "tiles": [
+                {
+                    "x": 0,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 0,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 1,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 1,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 2,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 2,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 3,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 3,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 4,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 4,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 5,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 5,
+                    "tile": -1,
+                    "rot": 0
+                },
+                {
+                    "x": 6,
+                    "flipX": false,
+                    "y": 0,
+                    "index": 6,
+                    "tile": -1,
+                    "rot": 0
+                }
+            ],
+            "name": "Layer 0"
+        }
+    ],
+    "tileheight": 64,
+    "tileswide": 7
+}
