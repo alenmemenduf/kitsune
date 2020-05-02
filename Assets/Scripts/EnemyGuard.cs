@@ -9,9 +9,10 @@ public class EnemyGuard : AbstractEnemy
     int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
 
     public Transform pathHolder;      // a gameObject that denotes the path, it has children that denote a waypoint
-
+    Transform FOV;
     private void Start()
     {
+        FOV = gameObject.transform.GetChild(0).transform;
         Vector2[] waypoints = new Vector2[pathHolder.childCount];
         for(int i = 0; i < waypoints.Length; i++)
         {
@@ -31,8 +32,12 @@ public class EnemyGuard : AbstractEnemy
             if (transform.position.x < targetWaypoint.x)
             {
                 faceDirection = 1;
+                if(FOV != null)
+                   FOV.localScale = new Vector2(1, FOV.localScale.y);
             } else {
                 faceDirection = -1;
+                if (FOV != null)
+                    FOV.localScale = new Vector2(-1, FOV.localScale.y);
             }
 
             transform.position = Vector2.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
