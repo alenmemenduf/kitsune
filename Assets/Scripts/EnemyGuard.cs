@@ -6,7 +6,7 @@ public class EnemyGuard : AbstractEnemy
 {
     public float speed = 5;           // Guard speed
     public float waitTime = 1f;       // Time for which the guard will stop at some point
-    int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
+    public int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
 
     public Transform pathHolder;      // a gameObject that denotes the path, it has children that denote a waypoint
 
