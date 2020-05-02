@@ -185,7 +185,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &463480086
 GameObject:
@@ -278,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c6b27a5b22613d746a01f27ac845c9b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  time: 0
   timerSpeed: 8
   colorChangeSpeed: 10
 --- !u!1 &502139458
@@ -372,7 +373,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 11
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &511671005
 GameObject:
@@ -499,7 +500,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &519420033
 MonoBehaviour:
@@ -1025,7 +1026,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 0}
   gameoverAudioClip: {fileID: 8300000, guid: 892bb2e7f9a87894db1f518720bd73f4, type: 3}
+  losePanel: {fileID: 0}
+  winPanel: {fileID: 0}
   timer: {fileID: 463480090}
+  winPanelImage: {fileID: 0}
+  starSprites: []
 --- !u!4 &867784857
 Transform:
   m_ObjectHideFlags: 0
@@ -1038,7 +1043,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 10
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!82 &867784858
 AudioSource:
@@ -1166,7 +1171,7 @@ Transform:
   - {fileID: 511671006}
   - {fileID: 690852714}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1137293483
 GameObject:
@@ -1552,7 +1557,7 @@ Transform:
   m_Children:
   - {fileID: 1638529291}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1233029079
 MonoBehaviour:
@@ -1781,7 +1786,7 @@ RectTransform:
   m_Children:
   - {fileID: 463480087}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1894,6 +1899,36 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1478425436}
   m_Mesh: {fileID: 10210, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!1 &1486992107
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 7204159769834255209}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1486992108}
+  m_Layer: 0
+  m_Name: Enemy Guard (Missing Prefab)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1486992108
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 7204159769834255209}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1486992107}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1638529290
 GameObject:
   m_ObjectHideFlags: 3
@@ -2085,7 +2120,7 @@ Transform:
   m_Children:
   - {fileID: 538074739}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1780758795
 MonoBehaviour:
@@ -2102,6 +2137,7 @@ MonoBehaviour:
   speed: 6
   waitTime: 0.93
   pathHolder: {fileID: 1065150105}
+  oppositeEnemy: {fileID: 0}
 --- !u!1 &1865672724
 GameObject:
   m_ObjectHideFlags: 0
@@ -2138,7 +2174,7 @@ Transform:
   - {fileID: 1137293487}
   - {fileID: 1478425437}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1897754635
 GameObject:
@@ -2377,7 +2413,7 @@ Transform:
   m_Children:
   - {fileID: 1357801348}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 91.71}
 --- !u!114 &2053728962
 MonoBehaviour:
