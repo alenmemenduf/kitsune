@@ -9,8 +9,9 @@ public class EnemyGuard : AbstractEnemy
     public int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
 
     public Transform pathHolder;      // a gameObject that denotes the path, it has children that denote a waypoint
-
-    public GameObject oppositeEnemy;
+    public Transform gun;
+    bool facingRight = true;
+    bool facingLeft = false;
     
     
     //Transform FOV;
@@ -51,12 +52,20 @@ public class EnemyGuard : AbstractEnemy
                 yield return new WaitForSeconds(waitTime);
 
                 if (faceDirection == 1) {
-                    transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, 90);
-                    
+
+                    gameObject.GetComponent<SpriteRenderer>().flipX = true;
+                    gun.rotation = Quaternion.Euler(new Vector3(gun.rotation.x, gun.rotation.y, 90));
+
+
+
+
+
                 }
-                else
+                else if(faceDirection == -1)
                 {
-                    transform.rotation = Quaternion.Euler(transform.rotation.x, transform.rotation.y, -90);
+                    gameObject.GetComponent<SpriteRenderer>().flipX = false;
+                    gun.rotation = Quaternion.Euler(new Vector3(gun.rotation.x, gun.rotation.y, -90));
+
                 }
             }
             yield return null;

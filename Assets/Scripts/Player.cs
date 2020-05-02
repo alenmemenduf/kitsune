@@ -58,8 +58,10 @@ public class Player : MonoBehaviour
     private bool facingLeft = false;
     RaycastController controller;
 
+    //Dash
     [HideInInspector]
-    public bool isDashing = false;
+    public bool dashed = false;
+    public float dashCooldown = 2f;
 
     float timeLeft;
 
@@ -69,7 +71,7 @@ public class Player : MonoBehaviour
     /// 
     void Dash()
     {
-        isDashing = true;
+        dashed = true;
         velocity.x = faceDirection * dashSpeed / dashTime;
    
     }
@@ -183,33 +185,12 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            if(visibleTargets.Count != 0)
-            {
-                float distance = (transform.position - visibleTargets[0].position).magnitude;
-                isHooked = true;
-                             
-                //velocity -= transform.position - visibleTargets[0].position;
 
-            }
-        }
-
-        if (Input.GetMouseButtonUp(0))
-        {
-            isHooked = false;
-        }
-        if (visibleTargets.Count == 0)
-        {
-            isHooked = false;
-        }
-
-
-
-        if (Input.GetKeyDown(KeyCode.LeftShift))
+        //Dash
+        if (Input.GetKeyDown(KeyCode.LeftShift) && dashed == false)
         {
             Dash();
-            timeLeft = dashTime;
+            timeLeft = dashCooldown;
         }
         if (timeLeft > 0f)
         {
@@ -217,7 +198,7 @@ public class Player : MonoBehaviour
         }
         else
         {
-            isDashing = false;
+            dashed = false;
         }
 
         velocity.y += gravity * Time.deltaTime;
