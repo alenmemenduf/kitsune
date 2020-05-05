@@ -65,10 +65,6 @@ public class Player : MonoBehaviour
 
     float timeLeft;
 
-    ///
-    /// debug
-    LineRenderer line;
-    /// 
     void Dash()
     {
         dashed = true;
@@ -79,44 +75,35 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        line = GetComponent<LineRenderer>();
-        if (!line)
-            line = gameObject.AddComponent<LineRenderer>();
-        line.startWidth = 0.1f;
-        line.endWidth = 0.1f;
-
-      
         controller = GetComponent<RaycastController>();
 
-        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);     //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
-        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;             //kinematic operation of jump velocity
+        gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);          //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
+        maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;                  //kinematic operation of jump velocity
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
-        StartCoroutine("FindTargetsWithDelay", .2f);
         print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
     }
-    // Update is called once per frame
     void Update()
     {
        
         //Movement Input
-        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  //Get Input from user
+        Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  // Get Input from user
         if (input.x != 0)
         {
-            faceDirection = input.x; // stores last direction the player faced.
+            faceDirection = input.x;    // Stores last direction the player faced.
         }
         animator.SetFloat("Speed", Mathf.Abs(input.x));
 
-        int wallDirX = (controller.collisions.left) ? -1 : 1;                                       //Direction of the wall we colided with.
+        int wallDirX = (controller.collisions.left) ? -1 : 1;    // Direction of the wall we colided with.
 
         //Horizontal movement smoothing
-        float targetVelocityX = input.x * moveSpeed;    //Desired velocity we want to achieve when moving
+        float targetVelocityX = input.x * moveSpeed;             // Desired velocity we want to achieve when moving
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);    //Smooth the movement between initial velocity and desired velosity (acceleration is taken into account)
 
         //Wall sliding
         bool wallSliding = false;
         if ((controller.collisions.left || controller.collisions.right) && // If player touching either wall &&
-            !controller.collisions.below && velocity.y < 0)  //If player is touching the wall while mid air
+            !controller.collisions.below && velocity.y < 0)  // If player is touching the wall while mid air
         {
 
             wallSliding = true;
@@ -127,7 +114,7 @@ public class Player : MonoBehaviour
                 timeUntilFall -= Time.deltaTime;
             }
 
-            if (timeToWallUnstick > 0)  //Time how much time before player can unstick from the wall (0.25 secs)         
+            if (timeToWallUnstick > 0)             //Time how much time before player can unstick from the wall (0.25 secs)         
             {
                 velocityXSmoothing = 0;
                 velocity.x = 0;
@@ -202,62 +189,6 @@ public class Player : MonoBehaviour
         }
 
         velocity.y += gravity * Time.deltaTime;
-        if (isHooked)
-        {
-            /*
-            float distance = (transform.position - visibleTargets[0].position).magnitude;
-            float maxDistance = 7;
-            ;
-            if (distance > maxDistance)
-            {
-                Vector3 test = visibleTargets[0].position + (transform.position - visibleTargets[0].position).normalized * maxDistance;
-
-                float dx = (test.x - transform.position.x) / Time.deltaTime;
-                float dy = (test.y - transform.position.y) / Time.deltaTime;
-
-               
-                
-               
-                velocity.x = (-faceDirection * 15 * Vector2.Perpendicular((Vector2)visibleTargets[0].position - (Vector2)transform.position).normalized).x;
-                
-               
-                velocity.y = dy;
-
-            }
-            */
-            /*
-            float distance = (transform.position + velocity - visibleTargets[0].position).magnitude;
-            float maxDistance = 5;
-            if (distance > maxDistance)
-            {
-                Vector3 test = visibleTargets[0].position + (transform.position + velocity - visibleTargets[0].position).normalized * maxDistance;
-                velocity += (test - (visibleTargets[0].position + (transform.position + velocity - visibleTargets[0].position)));
-            }*/
-            float dx = (visibleTargets[0].position.x - transform.position.x);
-            float dy = (visibleTargets[0].position.y - transform.position.y);
-
-            float distance = (transform.position + velocity - visibleTargets[0].position).magnitude;
-            float maxDistance = 4;
-            Vector3 v = new Vector3(0, 0, 0);
-            if (distance > maxDistance)
-            {
-                float dx1 = dx / distance * maxDistance;
-                float dy1 = dy / distance * maxDistance;
-                v.x -= (dx1 - dx) * Time.deltaTime;
-                v.y -= (dy1 - dy) * Time.deltaTime;
-            }
-
-            velocity.x += v.x / (Time.deltaTime * 5);
-            velocity.y += v.y / (Time.deltaTime * 5);
-
-            line.enabled = true;
-            line.SetPosition(0, transform.position);
-            line.SetPosition(1, visibleTargets[0].position);
-        }
-        else
-        {
-            line.enabled = false;
-        }
         controller.Move(velocity * Time.deltaTime);
         
         if(velocity.x < 0 && facingRight == true)
@@ -275,25 +206,6 @@ public class Player : MonoBehaviour
         }
 
     
-    }
-
-    IEnumerator FindTargetsWithDelay(float delay)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(delay);
-            FindVisibleHinges();
-        }
-    }
-    private void FindVisibleHinges()
-    {
-        visibleTargets.Clear();
-        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, hingeViewRadius, targetMask);
-        for (int i = 0; i < targetsInViewRadius.Length; i++)
-        {
-            Transform target = targetsInViewRadius[i].transform;
-            visibleTargets.Add(target);
-        }
     }
  
 }
