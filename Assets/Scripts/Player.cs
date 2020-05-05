@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     [HideInInspector]
     public bool isDead = false;
     public bool isWinner = false;
+
     //Movement constants
     public float maxJumpHeight = 4;            //Max height the player can jump
     public float minJumpHeight = 1;
@@ -44,7 +45,6 @@ public class Player : MonoBehaviour
     public Animator animator;
 
     //Kinematic operation variables/constants
-
     [HideInInspector]
     public Vector3 velocity;
     float gravity;
@@ -54,28 +54,24 @@ public class Player : MonoBehaviour
 
     [HideInInspector]
     public float faceDirection;
-    private bool facingRight = true;
-    private bool facingLeft = false;
     RaycastController controller;
 
     //Dash
     [HideInInspector]
     public bool dashed = false;
     public float dashCooldown = 2f;
+    float timeUntilDash;
 
-    float timeLeft;
+    private SpriteRenderer renderer;
 
-    void Dash()
-    {
-        dashed = true;
-        velocity.x = faceDirection * dashSpeed / dashTime;
    
-    }
+
 
     // Start is called before the first frame update
     void Start()
     {
         controller = GetComponent<RaycastController>();
+        renderer = GetComponent<SpriteRenderer>();
 
         gravity = -(2 * maxJumpHeight) / Mathf.Pow(timeToJumpApex, 2);          //Kinematic operatin defining deltaMovement (gravity is treated as acceleartion here)
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;                  //kinematic operation of jump velocity
@@ -85,7 +81,6 @@ public class Player : MonoBehaviour
     }
     void Update()
     {
-       
         //Movement Input
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  // Get Input from user
         if (input.x != 0)
@@ -97,20 +92,20 @@ public class Player : MonoBehaviour
         int wallDirX = (controller.collisions.left) ? -1 : 1;    // Direction of the wall we colided with.
 
         //Horizontal movement smoothing
-        float targetVelocityX = input.x * moveSpeed;             // Desired velocity we want to achieve when moving
+        float targetVelocityX = input.x * moveSpeed;          // Desired velocity we want to achieve when moving
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);    //Smooth the movement between initial velocity and desired velosity (acceleration is taken into account)
 
         //Wall sliding
         bool wallSliding = false;
         if ((controller.collisions.left || controller.collisions.right) && // If player touching either wall &&
-            !controller.collisions.below && velocity.y < 0)  // If player is touching the wall while mid air
+            !controller.collisions.below && velocity.y < 0)                // If player is touching the wall while mid air
         {
 
             wallSliding = true;
 
             if (velocity.y < -wallSlideSpeedMax && timeUntilFall > 0)
             {
-                velocity.y = -wallSlideSpeedMax;    // if object falls faster than max wall slide speed while 
+                velocity.y = -wallSlideSpeedMax;    // If object falls faster than max wall slide speed while 
                 timeUntilFall -= Time.deltaTime;
             }
 
@@ -134,13 +129,13 @@ public class Player : MonoBehaviour
         }
 
         animator.SetBool("isOnWall", wallSliding);
+
         //If player is on ground just set its velocity to 0
         if (controller.collisions.above || controller.collisions.below)
         {
             timeUntilFall = fallTime; // if on floor or hit the hed you can slide again
             velocity.y = 0;
         }
-
 
         //Jump Input
         if (Input.GetKeyDown(KeyCode.Space))
@@ -149,11 +144,11 @@ public class Player : MonoBehaviour
             {
                 if (input.x == 0)
                 {
-                    velocity.x = -wallDirX * wallJumpOff.x; //If we are not moving and jump while wallsliding then jump off the wall 
+                    velocity.x = -wallDirX * wallJumpOff.x; // If we are not moving and jump while wallsliding then jump off the wall 
                     velocity.y = wallJumpOff.y;
                 } else if (-wallDirX == input.x)
                 {
-                    timeUntilFall = fallTime; // if jumping and sliding on wall and changing direction => you are able to slide again
+                    timeUntilFall = fallTime;               // If jumping and sliding on wall and changing direction => you are able to slide again
                     velocity.x = -wallDirX * wallLeap.x;
                     velocity.y = wallLeap.y;
                 }
@@ -164,6 +159,7 @@ public class Player : MonoBehaviour
             }
 
         }
+
         if (Input.GetKeyUp(KeyCode.Space))
         {
             if (velocity.y > minJumpVelocity)
@@ -177,11 +173,11 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && dashed == false)
         {
             Dash();
-            timeLeft = dashCooldown;
+            timeUntilDash = dashCooldown;
         }
-        if (timeLeft > 0f)
+        if (timeUntilDash > 0f)
         {
-            timeLeft -= Time.deltaTime;
+            timeUntilDash -= Time.deltaTime;
         }
         else
         {
@@ -191,21 +187,24 @@ public class Player : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
         
-        if(velocity.x < 0 && facingRight == true)
+        if(velocity.x < 0)
         {
-            
-            transform.localScale = new Vector2(-transform.localScale.x, transform.localScale.y);
-            facingRight = false;
-            facingLeft = true;
+            renderer.flipX = true;
+        
         }
-        else if(velocity.x > 0 && facingLeft)
+        else if(velocity.x > 0)
         {
-            transform.localScale = new Vector2(Mathf.Abs(transform.localScale.x), transform.localScale.y);
-            facingLeft = false;
-            facingRight = true;
+            renderer.flipX = false;
         }
 
     
     }
- 
+
+    void Dash()
+    {
+        dashed = true;
+        velocity.x = faceDirection * dashSpeed / dashTime;
+
+    }
+
 }

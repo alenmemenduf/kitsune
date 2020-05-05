@@ -6,16 +6,18 @@ public class FieldOfView : MonoBehaviour
 {
     public float viewRadius;            //Radius of the circle in which we want the camera to
     [Range(0,360)]
-    public float viewAngle;
-
-    public LayerMask targetMask;
+    public float viewAngle;             //The angle of the actual FOV
+    
+    // Layer masks that will help the FOV to determine between a player and an obstacle
+    public LayerMask targetMask;        
     public LayerMask obstacleMask;
-    public Material redFovMaterial;
 
     [HideInInspector]
     public List<Transform> visibleTargets = new List<Transform>();
-    public float meshResolution;
-    public MeshFilter viewMeshFilter;
+    public float meshResolution;            //Resolution of the created FOV mesh
+    public MeshFilter viewMeshFilter;       //
+    public Material redFovMaterial;
+
     Mesh viewMesh;
     Material whiteFovMaterial;
     
@@ -35,7 +37,7 @@ public class FieldOfView : MonoBehaviour
         DrawFieldOfView();
         if(visibleTargets.Count != 0)
         {
-
+            // If we found a target, change mesh color to red
             viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = redFovMaterial;
 
         }
@@ -44,6 +46,12 @@ public class FieldOfView : MonoBehaviour
             viewMeshFilter.gameObject.GetComponent<MeshRenderer>().material = whiteFovMaterial;
         }
     }
+    /// <summary>
+    /// Converts from polar to cartesian coordinates.
+    /// </summary>
+    /// <param name="angleInDegrees">The angle in degrees</param>
+    /// <param name="angleIsGlobal">Chose if you want the angle to be global or not</param>
+    /// <returns>Returns cartesian representation of the angle.</returns>
     public Vector2 DirFromAngle(float angleInDegrees, bool angleIsGlobal)
     {
         if (!angleIsGlobal)
@@ -53,12 +61,15 @@ public class FieldOfView : MonoBehaviour
         return new Vector2(Mathf.Sin(angleInDegrees * Mathf.Deg2Rad), Mathf.Cos(angleInDegrees * Mathf.Deg2Rad));
     }
 
+    /// <summary>
+    /// Creates and displays the mesh of the FOV using triangulation.
+    /// </summary>
     void DrawFieldOfView()
     {
         int stepCount =Mathf.RoundToInt(viewAngle * meshResolution);
-        float stepAngleSize = viewAngle / stepCount;
+        float stepAngleSize = viewAngle / stepCount;        //Angle between 2 vertices
 
-        List<Vector3> viewPoints = new List<Vector3>();
+        List<Vector3> viewPoints = new List<Vector3>();     // List of vertices
 
         for(int i = 0; i <= stepCount; i++)
         {
@@ -93,6 +104,11 @@ public class FieldOfView : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Data structer that helps in keeping track of the information gathered from raycasts.
+    /// </summary>
+    /// <param name="globalAngle">The angle of our FOV</param>
+    /// <returns></returns>
     ViewCastInfo ViewCast(float globalAngle)
     {
         Vector2 dir = DirFromAngle(globalAngle, true);
@@ -116,10 +132,14 @@ public class FieldOfView : MonoBehaviour
             FindVisibleTargets();
         }
     }
+
+    /// <summary>
+    /// Finds the player targets that are contained within the angle of our FOV
+    /// </summary>
     public void FindVisibleTargets()
     {
         visibleTargets.Clear();
-        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask);
+        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask); //Get all colliders in our viewRadius
         for(int i = 0; i < targetsInViewRadius.Length; i++)
         {
             Transform target = targetsInViewRadius[i].transform;
@@ -131,7 +151,7 @@ public class FieldOfView : MonoBehaviour
 
                 if(!Physics2D.Raycast(transform.position, dirToTarget,distToTarget, obstacleMask) && !target.GetComponent<Player>().dashed)
                 {
-                    visibleTargets.Add(target);
+                    visibleTargets.Add(target);     //Chose target that is only within our view angle.
                     target.GetComponent<Player>().isDead = true;
                 }
  

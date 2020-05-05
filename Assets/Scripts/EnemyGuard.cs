@@ -8,15 +8,14 @@ public class EnemyGuard : AbstractEnemy
     public float waitTime = 1f;       // Time for which the guard will stop at some point
     public int faceDirection;                // Direction Guard is facing => 1 means right; -1 means left
 
-    public Transform pathHolder;      // a gameObject that denotes the path, it has children that denote a waypoint
+    public Transform pathHolder;      // A gameObject that denotes the path, it has children that denote a waypoint
     public Transform gun;
-    bool facingRight = true;
-    bool facingLeft = false;
+
+    Animator animator;
     
-    
-    //Transform FOV;
     private void Start()
     {
+        animator = GetComponent<Animator>();
         //FOV = gameObject.transform.GetChild(0).transform;
         Vector2[] waypoints = new Vector2[pathHolder.childCount];
         for(int i = 0; i < waypoints.Length; i++)
@@ -45,21 +44,19 @@ public class EnemyGuard : AbstractEnemy
             
 
             transform.position = Vector2.MoveTowards(transform.position, targetWaypoint, speed * Time.deltaTime);
-            if((Vector2)transform.position == targetWaypoint)
+            animator.SetBool("isMoving", true);
+            if ((Vector2)transform.position == targetWaypoint)
             {
                 targetWaypointIndex = (targetWaypointIndex+1)% waypoints.Length;
                 targetWaypoint = waypoints[targetWaypointIndex];
-                yield return new WaitForSeconds(waitTime);
 
+                animator.SetBool("isMoving", false);
+                yield return new WaitForSeconds(waitTime);
+               
                 if (faceDirection == 1) {
 
                     gameObject.GetComponent<SpriteRenderer>().flipX = true;
                     gun.rotation = Quaternion.Euler(new Vector3(gun.rotation.x, gun.rotation.y, 90));
-
-
-
-
-
                 }
                 else if(faceDirection == -1)
                 {

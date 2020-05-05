@@ -12,6 +12,6 @@ public class LosePanel : MonoBehaviour
     public void Retry()
     {
         losePanel.SetActive(false);
-        SceneManager.LoadScene("TestScene");
+        SceneManager.LoadScene("Game");
     }
 }

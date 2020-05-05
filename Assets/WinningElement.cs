@@ -6,7 +6,6 @@ public class WinningElement : MonoBehaviour
 {
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        print("MAMA");
         if (collision.gameObject.CompareTag("Player"))
         {
             print("Works");

@@ -10,7 +10,6 @@ public class EnemyCamera : AbstractEnemy
     public float cameraBound;
     public float cameraMoveSpeed;
 
-    private FieldOfView fow;
     // Start is called before the first frame update
     void Start()
     {

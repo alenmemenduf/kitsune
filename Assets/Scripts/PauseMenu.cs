@@ -54,6 +54,6 @@ public class PauseMenu : MonoBehaviour
 
     public void Retry()
     {
-        SceneManager.LoadScene("TestScene");
+        SceneManager.LoadScene("Game");
     }
 }
