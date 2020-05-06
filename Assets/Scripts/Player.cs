@@ -16,10 +16,8 @@ public class Player : MonoBehaviour
     public float minJumpHeight = 1;
     public float timeToJumpApex = .4f;      //How much time the jump action takes to reach apex
     public float moveSpeed = 6f;             //Player movement speed
-    public float dashSpeed = 30f;            //Player dash speed
-    public float dashTime = 10f;
-    float accelerationTimeAirborne = .3f;   //In air acceleration
-    float accelerationTimeGrounded = .08f;   //Grounded acceleration
+    float accelerationTimeAirborne = .2f;   //In air acceleration
+    float accelerationTimeGrounded = .1f;   //Grounded acceleration
 
     //Grappling hook
     public float hingeViewRadius;
@@ -57,9 +55,10 @@ public class Player : MonoBehaviour
     RaycastController controller;
 
     //Dash
-    [HideInInspector]
+    public float dashSpeed = 30f;            //Player dash speed
+    public float dashCooldownTime = 2f;
     public bool dashed = false;
-    public float dashCooldown = 2f;
+
     float timeUntilDash;
 
     private SpriteRenderer renderer;
@@ -77,10 +76,12 @@ public class Player : MonoBehaviour
         maxJumpVelocity = Mathf.Abs(gravity) * timeToJumpApex;                  //kinematic operation of jump velocity
         minJumpVelocity = Mathf.Sqrt(2 * Mathf.Abs(gravity) * minJumpHeight);
 
+        timeUntilDash = 0f;
         print("Gravity: " + gravity + " Jump Velocity: " + maxJumpVelocity);
     }
     void Update()
     {
+        #region MOVEMENT
         //Movement Input
         Vector2 input = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));  // Get Input from user
         if (input.x != 0)
@@ -94,8 +95,9 @@ public class Player : MonoBehaviour
         //Horizontal movement smoothing
         float targetVelocityX = input.x * moveSpeed;          // Desired velocity we want to achieve when moving
         velocity.x = Mathf.SmoothDamp(velocity.x, targetVelocityX, ref velocityXSmoothing, (controller.collisions.below) ? accelerationTimeGrounded : accelerationTimeAirborne);    //Smooth the movement between initial velocity and desired velosity (acceleration is taken into account)
+        #endregion
 
-        //Wall sliding
+        #region WALL SLIDE
         bool wallSliding = false;
         if ((controller.collisions.left || controller.collisions.right) && // If player touching either wall &&
             !controller.collisions.below && velocity.y < 0)                // If player is touching the wall while mid air
@@ -129,6 +131,7 @@ public class Player : MonoBehaviour
         }
 
         animator.SetBool("isOnWall", wallSliding);
+        #endregion
 
         //If player is on ground just set its velocity to 0
         if (controller.collisions.above || controller.collisions.below)
@@ -137,7 +140,7 @@ public class Player : MonoBehaviour
             velocity.y = 0;
         }
 
-        //Jump Input
+        #region JUMP
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (wallSliding)
@@ -167,27 +170,34 @@ public class Player : MonoBehaviour
                 velocity.y = minJumpVelocity;
             }
         }
+        #endregion
+
+        #region DASH
 
 
-        //Dash
-        if (Input.GetKeyDown(KeyCode.LeftShift) && dashed == false)
+        if (Input.GetKeyDown(KeyCode.LeftShift))
         {
-            Dash();
-            timeUntilDash = dashCooldown;
+            if (timeUntilDash <= 0)
+            {
+                timeUntilDash = dashCooldownTime;
+                velocity.x = faceDirection * dashSpeed;
+
+                animator.SetTrigger("dashed");
+              
+            }
         }
-        if (timeUntilDash > 0f)
+
+        if(timeUntilDash > 0)
         {
             timeUntilDash -= Time.deltaTime;
-        }
-        else
-        {
-            dashed = false;
+
         }
 
-        velocity.y += gravity * Time.deltaTime;
-        controller.Move(velocity * Time.deltaTime);
-        
-        if(velocity.x < 0)
+      
+        #endregion
+
+        #region FLIP
+        if (velocity.x < 0)
         {
             renderer.flipX = true;
         
@@ -196,15 +206,9 @@ public class Player : MonoBehaviour
         {
             renderer.flipX = false;
         }
+        #endregion
 
-    
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
-
-    void Dash()
-    {
-        dashed = true;
-        velocity.x = faceDirection * dashSpeed / dashTime;
-
-    }
-
 }

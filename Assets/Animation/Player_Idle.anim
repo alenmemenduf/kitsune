@@ -20,19 +20,16 @@ AnimationClip:
   m_PPtrCurves:
   - curve:
     - time: 0
-      value: {fileID: 2691521081985551824, guid: d52ca5d8109094e429b0b551bff37986,
+      value: {fileID: 7815371044791450175, guid: ce468f4f0b442b347848084eb5881e5c,
         type: 3}
-    - time: 0.083333336
-      value: {fileID: -197636651025261444, guid: d52ca5d8109094e429b0b551bff37986,
+    - time: 0.13333334
+      value: {fileID: 1012134607969099132, guid: ce468f4f0b442b347848084eb5881e5c,
         type: 3}
-    - time: 0.25
-      value: {fileID: -5829258666057938439, guid: d52ca5d8109094e429b0b551bff37986,
-        type: 3}
-    - time: 0.33333334
-      value: {fileID: 8772959507180751105, guid: d52ca5d8109094e429b0b551bff37986,
+    - time: 0.28333333
+      value: {fileID: -6563698218304314273, guid: ce468f4f0b442b347848084eb5881e5c,
         type: 3}
     - time: 0.41666666
-      value: {fileID: 5666961520929521705, guid: d52ca5d8109094e429b0b551bff37986,
+      value: {fileID: 3839310155185486058, guid: ce468f4f0b442b347848084eb5881e5c,
         type: 3}
     attribute: m_Sprite
     path: 
@@ -53,11 +50,10 @@ AnimationClip:
       customType: 23
       isPPtrCurve: 1
     pptrCurveMapping:
-    - {fileID: 2691521081985551824, guid: d52ca5d8109094e429b0b551bff37986, type: 3}
-    - {fileID: -197636651025261444, guid: d52ca5d8109094e429b0b551bff37986, type: 3}
-    - {fileID: -5829258666057938439, guid: d52ca5d8109094e429b0b551bff37986, type: 3}
-    - {fileID: 8772959507180751105, guid: d52ca5d8109094e429b0b551bff37986, type: 3}
-    - {fileID: 5666961520929521705, guid: d52ca5d8109094e429b0b551bff37986, type: 3}
+    - {fileID: 7815371044791450175, guid: ce468f4f0b442b347848084eb5881e5c, type: 3}
+    - {fileID: 1012134607969099132, guid: ce468f4f0b442b347848084eb5881e5c, type: 3}
+    - {fileID: -6563698218304314273, guid: ce468f4f0b442b347848084eb5881e5c, type: 3}
+    - {fileID: 3839310155185486058, guid: ce468f4f0b442b347848084eb5881e5c, type: 3}
   m_AnimationClipSettings:
     serializedVersion: 2
     m_AdditiveReferencePoseClip: {fileID: 0}
