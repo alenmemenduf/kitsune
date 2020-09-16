@@ -4,7 +4,7 @@ It was also the **first Unity game I made**, so Cristi helped a lot.
 
 ## The jam
 * It was a __3-days long__ game jam. 
-* The theme was __"You have only 5 minutes!"__.
+* The theme was __"You only have 5 minutes!"__.
 * There were 72 teams in total that participated and raised __40.710 RON__ through donations from partner companies and people that watched the stream where the games were played.
 
 ## How we made it
@@ -18,7 +18,7 @@ It was also the **first Unity game I made**, so Cristi helped a lot.
 
 ## The team
 * [Alen Memenduf](https://github.com/alenmemenduf) - programmed player and simple enemy path, level design, managed camera.
-* [Cristian Rosiu](https://github.com/cristianrosiu) - programmed player and enemy's detection radius, UI menu, drawn the player sprite.
+* [Cristian Rosiu](https://github.com/cristianrosiu) - programmed player and enemies' detection mechanic, UI menu, drawn the player sprite.
 
  The items written above were the main focus of each of us. It was a team's work so the game design, play-testing, choosing assets, and overall decisions were done together.
 
